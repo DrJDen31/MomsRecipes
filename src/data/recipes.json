@@ -1,0 +1,129 @@
+[
+  {
+    "id": "moms-spicy-lasagna",
+    "title": "Mom's Famous Spicy Lasagna",
+    "description": "A comforting classic with a hidden kick of chili flakes and italian sausage.",
+    "prepTime": "30 mins",
+    "cookTime": "1 hr 15 mins",
+    "servings": 8,
+    "difficulty": "Medium",
+    "image": "/images/lasagna.jpg",
+    "ingredients": [
+      {
+        "item": "Lasagna noodles",
+        "amount": 12,
+        "unit": "sheets"
+      },
+      {
+        "item": "Spicy Italian Sausage",
+        "amount": 1,
+        "unit": "lb"
+      },
+      {
+        "item": "Ricotta cheese",
+        "amount": 15,
+        "unit": "oz"
+      },
+      {
+        "item": "Mozzarella cheese",
+        "amount": 1,
+        "unit": "lb"
+      },
+      {
+        "item": "Marinara sauce",
+        "amount": 2,
+        "unit": "jars"
+      },
+      {
+        "item": "Red pepper flakes",
+        "amount": 1,
+        "unit": "tbsp"
+      }
+    ],
+    "steps": [
+      "Boil noodles according to package instructions.",
+      "Brown the sausage in a pan, breaking it up.",
+      "Mix ricotta with egg, salt, and pepper.",
+      "Layer sauce, noodles, cheese, and meat in a baking dish.",
+      "Bake at 375°F for 45 minutes covered, then 15 minutes uncovered."
+    ],
+    "category": "Main Course",
+    "tags": [
+      "Dinner",
+      "Italian",
+      "Spicy",
+      "Comfort"
+    ],
+    "notes": [
+      "use the square pan"
+    ],
+    "gallery": [
+      "/images/lasagna-gallery-1.jpg"
+    ],
+    "stepImages": {
+      "1": [
+        "/images/lasagna-step-2.jpg"
+      ],
+      "3": [
+        "/images/lasagna-step-4.jpg"
+      ]
+    }
+  },
+  {
+    "id": "classic-apple-pie",
+    "title": "Weekend Apple Pie",
+    "description": "Flaky crust with a sweet and tart apple filling.",
+    "prepTime": "45 mins",
+    "cookTime": "50 mins",
+    "servings": 8,
+    "difficulty": "Hard",
+    "image": "/images/apple-pie.jpg",
+    "ingredients": [
+      {
+        "item": "Granny Smith apples",
+        "amount": 6,
+        "unit": "whole"
+      },
+      {
+        "item": "Sugar",
+        "amount": 0.75,
+        "unit": "cup"
+      },
+      {
+        "item": "Cinnamon",
+        "amount": 1,
+        "unit": "tsp"
+      },
+      {
+        "item": "Pie crusts",
+        "amount": 2,
+        "unit": "rounds"
+      }
+    ],
+    "steps": [
+      "Peel and slice apples.",
+      "Mix apples with sugar and cinnamon.",
+      "Fill pie crust and top with second crust.",
+      "Bake at 425°F for 45-50 minutes."
+    ],
+    "category": "Dessert",
+    "tags": [
+      "Dessert",
+      "American",
+      "Comfort",
+      "Sweet"
+    ],
+    "notes": [],
+    "gallery": [
+      "/images/apple-gallery-1.jpg"
+    ],
+    "stepImages": {
+      "0": [
+        "/images/apple-step-1.jpg"
+      ],
+      "2": [
+        "/images/apple-step-3.jpg"
+      ]
+    }
+  }
+]

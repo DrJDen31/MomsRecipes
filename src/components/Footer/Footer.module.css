@@ -1,0 +1,27 @@
+.footer {
+    padding: 3rem 2rem;
+    background: var(--background);
+    border-top: 1px solid var(--card-border);
+    text-align: center;
+    margin-top: auto;
+    color: var(--foreground);
+    opacity: 0.8;
+}
+
+.heart {
+    color: var(--primary);
+    display: inline-block;
+    animation: beat 1.5s infinite ease-in-out;
+}
+
+@keyframes beat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}

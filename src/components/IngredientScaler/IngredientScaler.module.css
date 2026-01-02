@@ -1,0 +1,102 @@
+.container {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    border: 1px solid var(--card-border);
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--card-bg);
+    padding: 0.25rem;
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+}
+
+.btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s;
+}
+
+.btn:active {
+    transform: scale(0.9);
+}
+
+.servings {
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0 0.5rem;
+    min-width: 80px;
+    text-align: center;
+}
+
+.list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+    border: 1px solid var(--card-border);
+}
+
+.item:hover {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: var(--primary);
+}
+
+.checked {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: var(--primary);
+}
+
+.amount {
+    font-weight: 600;
+    color: var(--primary);
+    white-space: nowrap;
+    margin-left: 1rem;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 900;
+    transition: all 0.2s;
+}

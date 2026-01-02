@@ -1,0 +1,115 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--foreground) 0%, var(--primary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.meta {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    color: var(--accent);
+    font-size: 1.1rem;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 3rem;
+}
+
+.instructions {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--card-border);
+}
+
+.step {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.stepNum {
+    background: var(--primary);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.stepText {
+    line-height: 1.6;
+}
+
+.cookingModeBtn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--primary);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(230, 81, 0, 0.4);
+    font-weight: bold;
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.cookingModeBtn:hover {
+    transform: scale(1.05);
+    background: var(--primary-hover);
+}
+
+.fullScreenMode {
+    position: fixed;
+    inset: 0;
+    background: var(--background);
+    z-index: 1000;
+    padding: 4rem;
+    overflow-y: auto;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 2rem;
+    color: var(--foreground);
+}
+
+.stepLarge {
+    font-size: 2rem;
+    margin-bottom: 4rem;
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+    }
+}
