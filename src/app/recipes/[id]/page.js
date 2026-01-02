@@ -421,31 +421,33 @@ export default function RecipeDetail({ params }) {
                             {step}
                         </p>
                         
-                        {/* Dropdown Toggle */}
-                        <button 
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setExpandedStep(isExpanded ? null : i);
-                            }}
-                            style={{
-                                background:'white', 
-                                border:'2px solid var(--card-border)', 
-                                cursor:'pointer', 
-                                padding:'0', // Reset padding
-                                width:'32px', height:'32px', borderRadius:'50%', // Circle shape
-                                display:'flex', alignItems:'center', justifyContent:'center',
-                                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                                transition:'all 0.2s',
-                                color: 'var(--primary)',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-                            }}
-                        >
-                            ▼
-                        </button>
+                        {/* Dropdown Toggle - Only if images exist or isEditing */}
+                        {(isEditing || stepImgs.length > 0) && (
+                            <button 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setExpandedStep(isExpanded ? null : i);
+                                }}
+                                style={{
+                                    background:'white', 
+                                    border:'2px solid var(--card-border)', 
+                                    cursor:'pointer', 
+                                    padding:'0', // Reset padding
+                                    width:'32px', height:'32px', borderRadius:'50%', // Circle shape
+                                    display:'flex', alignItems:'center', justifyContent:'center',
+                                    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    transition:'all 0.2s',
+                                    color: 'var(--primary)',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                                }}
+                            >
+                                ▼
+                            </button>
+                        )}
                     </div>
 
                     {/* Expandable Photo Section */}
-                    {isExpanded && (
+                    {(isExpanded && (isEditing || stepImgs.length > 0)) && (
                         <div style={{
                             padding:'1rem', borderTop:'1px solid var(--card-border)', background:'rgba(0,0,0,0.01)',
                             display:'flex', gap:'0.5rem', overflowX:'auto'
