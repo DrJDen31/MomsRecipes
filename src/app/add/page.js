@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { saveNewRecipe } from '@/app/actions';
 import { useRouter } from 'next/navigation';
+import { useTags } from '@/context/TagContext';
 
 export default function AddRecipe() {
   const router = useRouter();
