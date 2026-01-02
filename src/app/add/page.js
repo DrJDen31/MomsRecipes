@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { saveNewRecipe } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import { useTags } from '@/context/TagContext';
+import styles from './page.module.css';
 
 export default function AddRecipe() {
   const router = useRouter();
