@@ -2,7 +2,14 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { TAG_CATEGORIES } from '@/lib/constants';
 
-const TagContext = createContext();
+const TagContext = createContext({
+  categories: TAG_CATEGORIES,
+  addCategory: () => {},
+  addTagToCategory: () => {},
+  isManagerOpen: false,
+  openManager: () => {},
+  closeManager: () => {}
+});
 
 export function TagProvider({ children }) {
   const [categories, setCategories] = useState(TAG_CATEGORIES);
