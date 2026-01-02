@@ -1,11 +1,9 @@
 'use client';
 import Link from 'next/link';
-import { useTags } from '@/context/TagContext';
-import TagManager from '@/components/TagManager/TagManager';
+import AuthButton from '../AuthButton/AuthButton';
 import styles from './Navbar.module.css';
 
-export default function Navbar() {
-  const { openManager } = useTags();
+export default function Navbar({ user }) {
 
   return (
     <>
@@ -13,14 +11,18 @@ export default function Navbar() {
         <Link href="/" className={styles.logo}>
           Mom's<span>Recipes</span>
         </Link>
-        <div className={styles.links}>
+        
+        <div className={styles.centerLinks}>
           <Link href="/" className={styles.link}>Home</Link>
           <Link href="/recipes" className={styles.link}>All Recipes</Link>
           <Link href="/add" className={styles.link}>Add Recipe</Link>
-          <button className={styles.link} onClick={openManager}>Tags</button>
+          <Link href="/tags" className={styles.link}>Tags</Link>
+        </div>
+
+        <div className={styles.authSection}>
+          <AuthButton user={user} />
         </div>
       </nav>
-      <TagManager />
     </>
   );
 }

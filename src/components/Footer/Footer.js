@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <p>
-        Made with <span className={styles.heart}>♥</span> for Mom | © <span suppressHydrationWarning>{new Date().getFullYear()}</span> Mom's Recipes
+        Made with <span className={styles.heart}>♥</span>
       </p>
     </footer>
   );

@@ -1,91 +1,39 @@
-'use client';
-import { useState, useMemo } from 'react';
-import RecipeCard from '@/components/RecipeCard/RecipeCard';
-import recipes from '@/data/recipes.json';
-import { useTags } from '@/context/TagContext';
-import styles from './page.module.css';
+import RecipeListingClient from './RecipeListingClient';
+import { createClient } from '@/utils/supabase/server';
 
-export default function RecipeListing() {
-  const [search, setSearch] = useState('');
-  const [selectedTags, setSelectedTags] = useState([]);
-  const { categories } = useTags();
+export const dynamic = 'force-dynamic'; // Ensure it refreshes on navigation
 
-  // Flatten all available tags from data + constants for a "quick" view or use categories
-  // For the filter UI, we'll show categories.
+export default async function RecipeListingPage({ searchParams }) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Fetch Recipes
+  let query = supabase.from('recipes').select('*, favorites(count)');
+  const { data: recipes } = await query;
   
-  const toggleTag = (tag) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
-  };
-
-  const filteredRecipes = useMemo(() => {
-    return recipes.filter(recipe => {
-      const matchesSearch = recipe.title.toLowerCase().includes(search.toLowerCase()) ||
-                          recipe.description.toLowerCase().includes(search.toLowerCase());
+  // Fetch Favorites for current user to pass "isFavorited" state, 
+  // though RecipeCard might need it. 
+  // Actually, RecipeListingClient fetches nothing now. It should take recipes as props.
+  // But wait, RecipeCard logic for favorites might need looking at.
+  // The current RecipeListingClient does client-side filtering. 
+  // We can just pass the raw recipes array and let the client filter.
+  // *However*, we need to know if *each* recipe is favorited by *this* user.
+  
+  let userFavorites = new Set();
+  if (user) {
+      const { data: favs } = await supabase
+        .from('favorites')
+        .select('recipe_id')
+        .eq('user_id', user.id);
       
-      const recipeTags = recipe.tags || [];
-      // AND logic: Recipe must contain ALL selected tags
-      // OR logic: Recipe must contain AT LEAST ONE selected tag?
-      // Usually "AND" is stricter, "OR" is easier. Let's do "AND" for Drill-down, or "OR" if that's standard.
-      // Let's go with "EVERY selected tag must be in recipe" (AND)
-      const matchesTags = selectedTags.length === 0 || selectedTags.every(t => recipeTags.includes(t) || recipe.category === t);
-      
-      return matchesSearch && matchesTags;
-    });
-  }, [search, selectedTags]);
+      if (favs) {
+          favs.forEach(f => userFavorites.add(f.recipe_id));
+      }
+  }
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>All Recipes</h1>
-        <div className={styles.controls}>
-          <input
-            type="text"
-            placeholder="Search for lasagna, apple pie..."
-            className={styles.searchBar}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          
-          <div className={styles.filters}>
-            {Object.entries(categories).map(([cat, tags]) => (
-                <div key={cat} className={styles.filterGroup}>
-                    <span className={styles.filterLabel}>{cat}:</span>
-                    <div className={styles.filterOptions}>
-                        {tags.map(tag => (
-                            <button
-                                key={tag}
-                                className={`${styles.categoryBtn} ${selectedTags.includes(tag) ? styles.active : ''}`}
-                                onClick={() => toggleTag(tag)}
-                            >
-                                {tag}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            ))}
-          </div>
-          
-          {selectedTags.length > 0 && (
-             <button onClick={() => setSelectedTags([])} style={{marginTop:'1rem', fontSize:'0.9rem', textDecoration:'underline', color:'var(--primary)'}}>
-                Clear Filters
-             </button>
-          )}
-        </div>
-      </div>
-
-      {filteredRecipes.length > 0 ? (
-        <div className={styles.grid}>
-          {filteredRecipes.map(recipe => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
-        </div>
-      ) : (
-        <div className={styles.empty}>
-          <p>No recipes found matching your criteria. Time to ask Mom for more?</p>
-        </div>
-      )}
-    </div>
-  );
+  // Enhance recipes with 'isFavorited' status if needed, 
+  // OR pass the set of favorite IDs to the client.
+  // Passing the set is cleaner.
+  
+  return <RecipeListingClient initialRecipes={recipes || []} favoriteIds={Array.from(userFavorites)} />;
 }

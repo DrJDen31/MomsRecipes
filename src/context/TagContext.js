@@ -12,26 +12,64 @@ const TagContext = createContext({
 });
 
 export function TagProvider({ children }) {
-  const [categories, setCategories] = useState(TAG_CATEGORIES);
   const [isManagerOpen, setIsManagerOpen] = useState(false);
+  // userTags is array of { name, category }
+  const [userTags, setUserTags] = useState([]);
 
-  // In a real app, we'd load these from a DB or local storage here
-  // useEffect(() => { ... }, [])
+  useEffect(() => {
+      const loadTags = async () => {
+          const { getUserTags } = await import('@/app/actions');
+          const res = await getUserTags();
+          if (res.success) {
+              setUserTags(res.tags);
+          }
+      };
+      loadTags();
+  }, []);
+
+  // Merge Platform Categories + User Tags
+  const categories = { ...TAG_CATEGORIES };
+  
+  // 1. Ensure all user categories exist in the object
+  userTags.forEach(t => {
+      if (!categories[t.category]) {
+          categories[t.category] = [];
+      }
+  });
+
+  // 2. Create the merged lists (Platform + User)
+  // We want to avoid duplicates if user added a platform tag to their collection.
+  // Actually, UI needs to show BOTH if they are "My Tags" (starred)?
+  // User asked: "custom tags should also have categories".
+  // If I have "Dinner" (Platform) and I add it to my tags, it's still in "Meal Type".
+  // If I create "My Special Dinner" and put it in "Meal Type", it should appear there.
+  
+  Object.keys(categories).forEach(cat => {
+      // Start with platform tags for this category (if any)
+      const platformTags = TAG_CATEGORIES[cat] || [];
+      // Get user tags for this category
+      const myTagsForCat = userTags.filter(t => t.category === cat).map(t => t.name);
+      
+      // Merge unique
+      categories[cat] = Array.from(new Set([...platformTags, ...myTagsForCat]));
+  });
 
   const addCategory = (name) => {
-    if (!categories[name]) {
-      setCategories(prev => ({ ...prev, [name]: [] }));
-    }
+    // Only used for completely new categories not in constants or user tags yet?
+    // With the new logic, just adding a tag with that category creates it.
   };
 
-  const addTagToCategory = (cat, tag) => {
-    setCategories(prev => {
-        const catTags = prev[cat] || [];
-        if (!catTags.includes(tag)) {
-            return { ...prev, [cat]: [...catTags, tag] };
-        }
-        return prev;
-    });
+  const addTagToCategory = () => {}; // Deprecated in favor of saveUserTag
+
+  const addUserTagLocal = (tag, category = 'Custom') => {
+      // Check if we already have this tag object
+      if (!userTags.some(t => t.name === tag)) {
+          setUserTags(prev => [...prev, { name: tag, category }]);
+      }
+  };
+
+  const removeUserTagLocal = (tag) => {
+      setUserTags(prev => prev.filter(t => t.name !== tag));
   };
 
   const openManager = () => setIsManagerOpen(true);
@@ -39,9 +77,10 @@ export function TagProvider({ children }) {
 
   return (
     <TagContext.Provider value={{ 
-      categories, 
-      addCategory, 
-      addTagToCategory,
+      categories, // This is now the merged list
+      userTags,   // Raw user collection { name, category }
+      addUserTagLocal,
+      removeUserTagLocal,
       isManagerOpen,
       openManager,
       closeManager

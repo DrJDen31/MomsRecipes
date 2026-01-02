@@ -7,8 +7,10 @@
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--card-border);
     padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
+
+    /* Grid for true centering */
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     box-shadow: var(--glass-shadow);
 }
@@ -20,15 +22,24 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    justify-self: start;
+    /* Align to left */
 }
 
 .logo span {
     color: var(--foreground);
 }
 
-.links {
+.centerLinks {
     display: flex;
     gap: 2rem;
+    justify-self: center;
+    /* Align to center */
+}
+
+.authSection {
+    justify-self: end;
+    /* Align to right */
 }
 
 .link {
@@ -36,6 +47,11 @@
     color: var(--foreground);
     transition: color var(--transition-fast);
     position: relative;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
 .link::after {
@@ -60,9 +76,16 @@
     transform-origin: bottom left;
 }
 
-@media (max-width: 768px) {
-    .links {
-        display: none;
-        /* Mobile menu to be added later or simple stack */
+@media (max-width: 900px) {
+    .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .centerLinks {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 }

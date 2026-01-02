@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import { TagProvider } from "@/context/TagContext";
+import { createClient } from "@/utils/supabase/server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,12 +20,17 @@ export const metadata = {
   description: "A digital cookbook of our family's favorite recipes.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <TagProvider>
-          <Navbar />
+          <Navbar user={user} />
           <main style={{ minHeight: 'calc(100vh - 200px)' }}>
             {children}
           </main>

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { saveNewRecipe } from '@/app/actions';
+import { saveNewRecipe, uploadImage } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import { useTags } from '@/context/TagContext';
 import styles from './page.module.css';
@@ -12,7 +12,8 @@ export default function AddRecipe() {
   
   const [selectedTags, setSelectedTags] = useState([]);
   const [customTagInput, setCustomTagInput] = useState('');
-  const [notesInput, setNotesInput] = useState(''); // New initial notes
+  const [notesInput, setNotesInput] = useState('');
+  const [imageFile, setImageFile] = useState(null);
 
   const toggleTag = (tag) => {
     setSelectedTags(prev => 
@@ -35,25 +36,40 @@ export default function AddRecipe() {
     
     // Construct recipe object from form data
     const formData = new FormData(e.target);
+    
+    // Handle Image Upload First
+    let imageUrl = null;
+    if (imageFile) {
+        const imageFormData = new FormData();
+        imageFormData.append('file', imageFile);
+        const uploadRes = await uploadImage(imageFormData);
+        if (!uploadRes.success) {
+            alert('Failed to upload image: ' + uploadRes.error);
+            setSubmitted(false);
+            return;
+        }
+        imageUrl = uploadRes.url;
+    }
+
     const newRecipe = {
         title: formData.get('title'),
         prepTime: formData.get('prepTime'),
         cookTime: formData.get('cookTime'),
-        difficulty: 'Medium', // Default for now, could add select
-        servings: 4, // Default
+        difficulty: 'Medium', 
+        servings: 4, 
         description: formData.get('description'),
-        ingredients: formData.get('ingredients').split('\n').filter(l => l.trim()).map(l => ({item: l, amount: 1, unit: 'unit'})), // Simple parsing
+        ingredients: formData.get('ingredients').split('\n').filter(l => l.trim()).map(l => ({item: l, amount: 1, unit: 'unit'})), 
         steps: formData.get('instructions').split('\n').filter(l => l.trim()),
         tags: selectedTags,
-        notes: notesInput.trim() ? [notesInput.trim()] : []
+        notes: notesInput.trim() ? [notesInput.trim()] : [],
+        image: imageUrl // Add the image URL
     };
 
     const result = await saveNewRecipe(newRecipe);
-    // const result = { success: true }; // Mock success for build test
 
     if (result.success) {
         alert("Recipe saved to Mom's secret vault!");
-        router.push('/recipes'); // Redirect to list
+        router.push('/recipes'); 
     } else {
         alert('Failed to save recipe: ' + result.error);
         setSubmitted(false);
@@ -68,6 +84,23 @@ export default function AddRecipe() {
         <div className={styles.group}>
           <label className={styles.label}>Recipe Title</label>
           <input name="title" type="text" className={styles.input} placeholder="e.g. Aunt Sally's Pecan Pie" required />
+        </div>
+        
+        {/* Image Upload Field */}
+        <div className={styles.group}>
+          <label className={styles.label}>Cover Image</label>
+          <div style={{border:'2px dashed var(--card-border)', borderRadius:'8px', padding:'1rem', textAlign:'center', cursor:'pointer'}}>
+             <input 
+                type="file" 
+                accept="image/*" 
+                onChange={(e) => setImageFile(e.target.files[0])} 
+                style={{display: 'none'}} 
+                id="cover-upload"
+             />
+             <label htmlFor="cover-upload" style={{cursor:'pointer', display:'block', color:'var(--primary)'}}>
+                {imageFile ? `Selected: ${imageFile.name}` : '📸 Click to Upload Photo'}
+             </label>
+          </div>
         </div>
 
         {/* Dynamic Tag Sections */}
@@ -111,8 +144,6 @@ export default function AddRecipe() {
                 onChange={e => setCustomTagInput(e.target.value)}
                 onKeyDown={handleAddCustomTag}
             />
-             {/* Show custom selected tags distinct from categories if needed, or just rely on the toggle state visual from above if they match. 
-                 For purely custom tags not in categories: */}
              <div style={{display:'flex', flexWrap:'wrap', gap:'0.5rem', marginTop:'0.5rem'}}>
                 {selectedTags.filter(t => !Object.values(categories).flat().includes(t)).map(tag => (
                    <span key={tag} style={{background:'var(--foreground)', color:'var(--background)', padding:'0.25rem 0.75rem', borderRadius:'20px', fontSize:'0.85rem', display:'flex', alignItems:'center', gap:'0.5rem'}}>
@@ -122,8 +153,6 @@ export default function AddRecipe() {
                 ))}
              </div>
           </div>
-          
-          {/* TagManager removed from here, now in Navbar */}
         </div>
 
         <div className={styles.row}>
@@ -152,7 +181,6 @@ export default function AddRecipe() {
           <textarea name="instructions" className={styles.textarea} placeholder="Step 1: Mix everything..." />
         </div>
 
-        {/* Notes Section */}
         <div className={styles.group}>
           <label className={styles.label}>Initial Notes (Optional)</label>
           <textarea 
@@ -167,6 +195,10 @@ export default function AddRecipe() {
         <button type="submit" className={styles.submitBtn} disabled={submitted}>
           {submitted ? 'Saving...' : 'Save Recipe'}
         </button>
+        
+        <p style={{fontSize:'0.8rem', opacity:0.7, marginTop:'1rem', textAlign:'center'}}>
+            * You must be logged in to save.
+        </p>
       </form>
     </div>
   );
