@@ -3,6 +3,8 @@ import Link from 'next/link';
 import AuthButton from '../AuthButton/AuthButton';
 import styles from './Navbar.module.css';
 
+import NotificationBell from '../NotificationBell/NotificationBell';
+
 export default function Navbar({ user }) {
 
   return (
@@ -15,11 +17,13 @@ export default function Navbar({ user }) {
         <div className={styles.centerLinks}>
           <Link href="/" className={styles.link}>Home</Link>
           <Link href="/recipes" className={styles.link}>All Recipes</Link>
+          <Link href="/my-recipes" className={styles.link}>My Recipes</Link>
           <Link href="/add" className={styles.link}>Add Recipe</Link>
           <Link href="/tags" className={styles.link}>Tags</Link>
         </div>
 
         <div className={styles.authSection}>
+          <NotificationBell userId={user?.id} />
           <AuthButton user={user} />
         </div>
       </nav>

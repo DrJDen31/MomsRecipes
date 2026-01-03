@@ -2,12 +2,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import IngredientScaler from '@/components/IngredientScaler/IngredientScaler';
-import { addNote, deleteNote, updateRecipe, uploadImage, addToGallery, removeFromGallery, toggleFavorite, saveUserTag, deleteRecipe } from '@/app/actions';
+import { addNote, deleteNote, updateRecipe, uploadImage, addToGallery, removeFromGallery, toggleFavorite, saveUserTag, deleteRecipe, grantEditAccess, revokeEditAccess, getEditors } from '@/app/actions';
 import { useTags } from '@/context/TagContext';
 import { TAG_CATEGORIES } from '@/lib/constants';
 import styles from './page.module.css';
 
-export default function RecipeDetailClient({ recipe, canEdit, userId }) {
+export default function RecipeDetailClient({ recipe, canEdit, isOwner, userId }) {
   const searchParams = useSearchParams();
   const router = useRouter(); 
   
@@ -93,6 +93,45 @@ export default function RecipeDetailClient({ recipe, canEdit, userId }) {
   const allPlatformTags = new Set(Object.values(TAG_CATEGORIES).flat());
   
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [editors, setEditors] = useState([]);
+  const [newEditorEmail, setNewEditorEmail] = useState('');
+  const [shareLoading, setShareLoading] = useState(false);
+
+  const fetchEditors = async () => {
+    const res = await getEditors(r.id);
+    if (res.success) {
+        setEditors(res.editors);
+    }
+  };
+
+  const handleOpenShare = () => {
+      setShowShareModal(true);
+      fetchEditors();
+  };
+
+  const handleAddEditor = async (e) => {
+      e.preventDefault();
+      setShareLoading(true);
+      const res = await grantEditAccess(r.id, newEditorEmail);
+      if (res.success) {
+          setNewEditorEmail('');
+          fetchEditors();
+      } else {
+          alert(res.error);
+      }
+      setShareLoading(false);
+  };
+
+  const handleRemoveEditor = async (editorId) => {
+      if(!confirm('Revoke access for this user?')) return;
+      const res = await revokeEditAccess(r.id, editorId);
+      if (res.success) {
+          fetchEditors();
+      } else {
+          alert('Failed to revoke access: ' + res.error);
+      }
+  };
   
   // Track expanded images (Default: all hidden)
   const [expandedStepImages, setExpandedStepImages] = useState([]);
@@ -439,17 +478,31 @@ export default function RecipeDetailClient({ recipe, canEdit, userId }) {
                     </button>
                 )}
 
-                 {/* Only show Edit button if user is owner */}
+                 {/* Only show Edit button if user is owner OR editor */}
                  {!isEditing && canEdit && (
-                     <button 
-                        onClick={() => setIsEditing(true)}
-                        style={{
-                            background:'none', border:'1px solid var(--primary)', color:'var(--primary)',
-                            padding:'0.5rem 1rem', borderRadius:'20px', cursor:'pointer', fontWeight:'bold'
-                        }}
-                     >
-                        ✏️ Edit Recipe
-                     </button>
+                     <>
+                        {isOwner && (
+                             <button
+                                onClick={handleOpenShare}
+                                style={{
+                                    background:'none', border:'1px solid var(--accent)', color:'var(--accent)',
+                                    padding:'0.5rem 1rem', borderRadius:'20px', cursor:'pointer', fontWeight:'bold',
+                                    display:'flex', gap:'0.4rem', alignItems:'center'
+                                }}
+                             >
+                                👥 Share
+                             </button>
+                        )}
+                        <button 
+                            onClick={() => setIsEditing(true)}
+                            style={{
+                                background:'none', border:'1px solid var(--primary)', color:'var(--primary)',
+                                padding:'0.5rem 1rem', borderRadius:'20px', cursor:'pointer', fontWeight:'bold'
+                            }}
+                        >
+                            ✏️ Edit Recipe
+                        </button>
+                     </>
                  )}
                  {isEditing && (
                      <div style={{display:'flex', gap:'0.5rem'}}>
@@ -739,7 +792,7 @@ export default function RecipeDetailClient({ recipe, canEdit, userId }) {
       
       {/* Edit Mode Actions (Delete) */}
       {/* Edit Mode Actions (Delete) */}
-      {isEditing && (
+      {isEditing && isOwner && (
           <div style={{marginTop:'2rem', padding:'2rem', borderTop:'1px solid var(--card-border)'}}>
               <h3 style={{color:'red', marginBottom:'1rem'}}>Danger Zone</h3>
               <button 
@@ -812,6 +865,94 @@ export default function RecipeDetailClient({ recipe, canEdit, userId }) {
                             style={{padding:'0.75rem 1.5rem', borderRadius:'8px', border:'none', background:'red', color:'white', fontWeight:'bold', cursor:'pointer'}}
                         >
                            Remove
+                       </button>
+                   </div>
+              </div>
+          </div>
+      )}
+
+      {/* Share Modal */}
+      {showShareModal && (
+          <div style={{
+              position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:5000,
+              display:'flex', alignItems:'center', justifyContent:'center'
+          }} onClick={() => setShowShareModal(false)}>
+              <div 
+                onClick={e => e.stopPropagation()}
+                style={{
+                    background:'white', padding:'2rem', borderRadius:'12px', maxWidth:'500px', width:'90%',
+                    maxHeight:'80vh', overflowY:'auto'
+                }}
+              >
+                   <h3 style={{marginBottom:'1.5rem', color:'var(--foreground)'}}>Share Access</h3>
+                   
+                   <form onSubmit={handleAddEditor} style={{marginBottom:'2rem', display:'flex', gap:'0.5rem'}}>
+                       <input 
+                            type="email" 
+                            placeholder="Enter user email..." 
+                            required
+                            value={newEditorEmail}
+                            onChange={e => setNewEditorEmail(e.target.value)}
+                            style={{flex:1, padding:'0.75rem', borderRadius:'8px', border:'1px solid var(--card-border)'}}
+                       />
+                       <button 
+                            type="submit" 
+                            disabled={shareLoading}
+                            style={{
+                                padding:'0.75rem 1.5rem', borderRadius:'8px', border:'none', 
+                                background:'var(--primary)', color:'white', fontWeight:'bold', cursor:'pointer',
+                                opacity: shareLoading ? 0.7 : 1
+                            }}
+                       >
+                           {shareLoading ? 'Adding...' : 'Add'}
+                       </button>
+                   </form>
+
+                   <div style={{marginBottom:'1rem'}}>
+                       <h4 style={{marginBottom:'0.5rem', opacity:0.8}}>Editors</h4>
+                       {editors.length === 0 ? (
+                           <p style={{fontStyle:'italic', opacity:0.6}}>No one else has access yet.</p>
+                       ) : (
+                           <ul style={{listStyle:'none', padding:0}}>
+                               {editors.map(editor => (
+                                   <li key={editor.id} style={{
+                                       display:'flex', alignItems:'center', justifyContent:'space-between',
+                                       padding:'0.75rem', borderBottom:'1px solid var(--card-border)'
+                                   }}>
+                                       <div style={{display:'flex', alignItems:'center', gap:'0.75rem'}}>
+                                           {editor.avatar_url ? (
+                                               <img src={editor.avatar_url} style={{width:'32px', height:'32px', borderRadius:'50%'}} />
+                                           ) : (
+                                               <div style={{width:'32px', height:'32px', borderRadius:'50%', background:'#eee', display:'flex', alignItems:'center', justifyContent:'center'}}>👤</div>
+                                           )}
+                                           <div>
+                                               <div style={{fontWeight:'bold'}}>{editor.full_name || 'User'}</div>
+                                               <div style={{fontSize:'0.85rem', opacity:0.7}}>{editor.email}</div>
+                                           </div>
+                                       </div>
+                                       <button 
+                                            onClick={() => handleRemoveEditor(editor.id)}
+                                            style={{
+                                                background:'none', border:'none', color:'red', cursor:'pointer',
+                                                padding:'0.5rem', opacity:0.7, transition:'opacity 0.2s'
+                                            }}
+                                            onMouseOver={e => e.target.style.opacity = 1}
+                                            onMouseOut={e => e.target.style.opacity = 0.7}
+                                       >
+                                           Remove
+                                       </button>
+                                   </li>
+                               ))}
+                           </ul>
+                       )}
+                   </div>
+                   
+                   <div style={{textAlign:'right', marginTop:'2rem'}}>
+                       <button 
+                            onClick={() => setShowShareModal(false)}
+                            style={{padding:'0.5rem 1rem', borderRadius:'8px', border:'1px solid #ccc', background:'transparent', cursor:'pointer'}}
+                       >
+                           Close
                        </button>
                    </div>
               </div>

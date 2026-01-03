@@ -19,6 +19,7 @@
     font-size: 0.9rem;
     text-decoration: none;
     transition: all 0.2s;
+    white-space: nowrap;
 }
 
 .button:hover {

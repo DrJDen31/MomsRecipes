@@ -59,7 +59,27 @@ export default async function RecipeDetail({ params }) {
     .eq('recipe_id', recipe.id)
     .order('created_at', { ascending: true });
 
-  const canEdit = user && user.id === recipe.user_id;
+
+  // Check Edit Access
+  let canEdit = false;
+  let isOwner = false;
+
+  if (user) {
+      if (user.id === recipe.user_id) {
+          canEdit = true;
+          isOwner = true;
+      } else {
+          // Check editors table
+          const { data: editor } = await supabase
+            .from('recipe_editors')
+            .select('id')
+            .eq('recipe_id', recipe.id)
+            .eq('user_id', user.id)
+            .single();
+          
+          if (editor) canEdit = true;
+      }
+  }
 
   return (
     <RecipeDetailClient 
@@ -72,6 +92,7 @@ export default async function RecipeDetail({ params }) {
         favorite_count: favoriteCount
       }} 
       canEdit={!!canEdit}
+      isOwner={!!isOwner}
       userId={user ? user.id : null}
     />
   );

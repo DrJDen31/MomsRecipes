@@ -1,0 +1,132 @@
+.wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.bellButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    color: var(--foreground);
+    transition: transform 0.2s;
+}
+
+.bellButton:hover {
+    transform: scale(1.1);
+}
+
+.badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: red;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 300px;
+    max-width: 90vw;
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1000;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--card-border);
+    font-weight: bold;
+    background: var(--card-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list {
+    max-height: 400px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--card-border);
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.item:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.unread {
+    background: rgba(var(--primary-rgb), 0.05);
+    /* Assuming primary-rgb var exists or use a tint */
+}
+
+.unread:hover {
+    background: rgba(var(--primary-rgb), 0.1);
+}
+
+.itemUnreadIndicator {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    display: inline-block;
+}
+
+.message {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.time {
+    font-size: 0.75rem;
+    color: var(--foreground);
+    opacity: 0.6;
+}
+
+.empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--foreground);
+    opacity: 0.6;
+    font-style: italic;
+}
