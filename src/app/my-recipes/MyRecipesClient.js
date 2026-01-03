@@ -5,6 +5,8 @@ import RecipeCard from '@/components/RecipeCard/RecipeCard';
 import styles from './page.module.css';
 import Link from 'next/link';
 
+import { Plus } from 'lucide-react';
+
 export default function MyRecipesClient({ owned = [], shared = [], gallery = [] }) {
   const [activeTab, setActiveTab] = useState('owned');
 
@@ -19,8 +21,13 @@ export default function MyRecipesClient({ owned = [], shared = [], gallery = [] 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>My Collection</h1>
-        <p className={styles.subtitle}>Manage your recipes and contributions</p>
+        <div>
+            <h1 className={styles.title}>My Collection</h1>
+            <p className={styles.subtitle}>Manage your recipes and contributions</p>
+        </div>
+        <Link href="/add" className={styles.addButton} title="Add Recipe">
+            <Plus size={24} />
+        </Link>
       </header>
 
       <div className={styles.tabs}>

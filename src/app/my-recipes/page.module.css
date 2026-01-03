@@ -7,6 +7,29 @@
 
 .header {
     margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.addButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.addButton:hover {
+    transform: scale(1.05);
 }
 
 .title {
@@ -14,6 +37,7 @@
     font-weight: 800;
     margin-bottom: 0.5rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
