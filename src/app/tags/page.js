@@ -79,8 +79,8 @@ export default function TagsPage() {
               {/* 1. Tag Creator */}
               <section className={styles.card}>
                   <h2 className={styles.cardTitle}>Create Tag</h2>
-                  <form onSubmit={handleCreateCustom} style={{width:'100%', display:'flex', flexDirection:'column', gap:'0.5rem'}}>
-                    <div style={{display:'flex', gap:'0.5rem'}}>
+                  <form onSubmit={handleCreateCustom} className={styles.createForm}>
+                    <div className={styles.createInputs}>
                         <input 
                             type="text" 
                             placeholder="Tag name..." 
@@ -94,7 +94,7 @@ export default function TagsPage() {
                             value={selectedCategory} 
                             onChange={(e) => setSelectedCategory(e.target.value)}
                             className={styles.input}
-                            style={{maxWidth:'150px'}}
+                            id="category-input"
                         />
                         <datalist id="category-options">
                             <option value="Custom" />

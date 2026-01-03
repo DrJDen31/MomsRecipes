@@ -96,6 +96,7 @@
 
 .fullScreenMode {
     /* Add bottom padding for better scroll feel */
+    position: relative;
 }
 
 @media (max-width: 768px) {
@@ -123,6 +124,20 @@
 
 @media (max-width: 768px) {
     .content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ingredientsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .ingredientsGrid {
         grid-template-columns: 1fr;
     }
 }

@@ -57,6 +57,35 @@
     border: 1px solid var(--card-border);
     border-radius: 8px;
     font-size: 1rem;
+    min-width: 0;
+    /* Prevent flex blowout */
+}
+
+/* Create Tag Form */
+.createForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.createInputs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#category-input {
+    max-width: 150px;
+}
+
+@media (max-width: 768px) {
+    .createInputs {
+        flex-direction: column;
+    }
+
+    #category-input {
+        max-width: 100%;
+    }
 }
 
 .addBtn {
@@ -143,6 +172,8 @@
 
 .categoryBlock {
     /* outline */
+    display: flex;
+    flex-direction: column;
 }
 
 .catName {

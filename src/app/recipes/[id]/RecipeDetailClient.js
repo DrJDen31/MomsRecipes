@@ -328,7 +328,7 @@ export default function RecipeDetailClient({ recipe, canEdit, userId }) {
              
              <div style={{marginBottom:'3rem', padding:'2rem', background:'var(--card-bg)', borderRadius:'var(--radius)', border:'1px solid var(--card-border)'}}>
                 <h2 style={{marginBottom:'1rem', color:'var(--primary)'}}>Ingredients ({servings} Servings)</h2>
-                <ul style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem', listStyle:'none'}}>
+                <ul className={styles.ingredientsGrid}>
                     {(r.ingredients || []).map((ing, i) => {
                          const isChecked = checkedIngredients.includes(i);
                          return (

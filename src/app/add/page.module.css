@@ -4,18 +4,7 @@
     padding: 2rem;
 }
 
-.title.row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-@media (max-width: 768px) {
-    .row {
-        flex-direction: column;
-        gap: 1rem;
-    }
-}
+/* Removed redundant media query */
 
 .dynamicList {
     display: flex;
@@ -187,8 +176,26 @@
     background: var(--primary-hover);
 }
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .title {
+        font-size: 2rem;
+        margin-top: 1rem;
+    }
+}
+
 .row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
+}
+
+.row>div {
+    flex: 1;
+    min-width: 200px;
+    /* Force wrap on narrow screens */
 }
