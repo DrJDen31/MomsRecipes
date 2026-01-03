@@ -26,13 +26,13 @@ export default function Navbar({ user }) {
 
       <div className={`${styles.menuContent} ${isOpen ? styles.open : ''}`}>
         <div className={styles.centerLinks}>
-          <Link href="/" className={styles.link} title="Home">
+          <Link href="/" className={styles.link} title="Home" onClick={() => setIsOpen(false)}>
             <Home size={20} />
           </Link>
-          <Link href="/recipes" className={styles.link}>All Recipes</Link>
-          <Link href="/my-recipes" className={styles.link}>My Recipes</Link>
-          <Link href="/add" className={styles.link}>Add Recipe</Link>
-          <Link href="/tags" className={styles.link}>Tags</Link>
+          <Link href="/recipes" className={styles.link} onClick={() => setIsOpen(false)}>All Recipes</Link>
+          <Link href="/my-recipes" className={styles.link} onClick={() => setIsOpen(false)}>My Recipes</Link>
+          <Link href="/add" className={styles.link} onClick={() => setIsOpen(false)}>Add Recipe</Link>
+          <Link href="/tags" className={styles.link} onClick={() => setIsOpen(false)}>Tags</Link>
         </div>
 
         <div className={styles.authSection}>
