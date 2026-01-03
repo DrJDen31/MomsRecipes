@@ -4,6 +4,109 @@
     padding: 2rem;
 }
 
+.title.row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+.dynamicList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.dynamicRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+}
+
+.dynamicInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    padding: 0.25rem;
+    color: var(--foreground);
+    background: transparent;
+}
+
+.actionBtn {
+    background: transparent;
+    border: none;
+    color: var(--accent);
+    /* Default color for remove/add */
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.actionBtn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: red;
+    /* Destructive hover */
+}
+
+.addBtnRow {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--card-bg);
+    border: 1px dashed var(--primary);
+    color: var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+}
+
+.addBtnRow:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 0.3rem 0.7rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.pill .actionBtn {
+    color: var(--primary-dark);
+    font-size: 1rem;
+    padding: 0;
+}
+
+.pill .actionBtn:hover {
+    background: transparent;
+    color: red;
+}
+
 .title {
     text-align: center;
     margin-bottom: 2rem;
@@ -58,11 +161,24 @@
 }
 
 .submitBtn {
+    background: #e65100;
+    /* Fallback */
     background: var(--primary);
     color: white;
     padding: 1rem;
     border-radius: 8px;
     font-weight: 700;
+    margin-top: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.submitBtn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
     margin-top: 1rem;
     transition: background var(--transition-fast);
 }

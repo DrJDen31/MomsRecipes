@@ -36,6 +36,19 @@
     max-width: 800px;
     margin: 0 auto;
     width: 100%;
+    padding-bottom: 0.5rem;
+    /* space for scrollbar if needed, though hidden */
+}
+
+/* Add subtle fading on left too if scrolled? CSS alone is tricky for scroll shadows without JS, 
+   but mask-image helps fade the end */
+
+.divider {
+    width: 100%;
+    margin: 1.5rem 0;
+    border: 0;
+    border-top: 1px solid var(--card-border);
+    opacity: 0.5;
 }
 
 .searchWrapper {

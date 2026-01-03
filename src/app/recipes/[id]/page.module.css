@@ -95,12 +95,13 @@
 }
 
 .fullScreenMode {
-    position: fixed;
-    inset: 0;
-    background: var(--background);
-    z-index: 1000;
-    padding: 4rem;
-    overflow-y: auto;
+    /* Add bottom padding for better scroll feel */
+}
+
+@media (max-width: 768px) {
+    .fullScreenMode {
+        padding: 2rem 1rem 100px 1rem;
+    }
 }
 
 .closeBtn {

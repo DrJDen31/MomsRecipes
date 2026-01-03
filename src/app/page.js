@@ -1,8 +1,8 @@
 
 import styles from './page.module.css';
 import { createClient } from '@/utils/supabase/server';
-import RecipeCard from '@/components/RecipeCard/RecipeCard';
 import Link from 'next/link';
+import PaginatedRecipeList from '@/components/PaginatedRecipeList';
 
 export const revalidate = 0;
 
@@ -43,21 +43,38 @@ export default async function Home() {
   }));
 
   // 4. Derive Layout Lists
-  // If logged in, Hero = My Favorites. If not, Hero = Top 3 (or just default)
-  // Actually, filtering `recipesWithStats` ensures we have the counts!
-  const userFavorites = recipesWithStats.filter(r => r.is_favorited);
   
-  const heroRecipes = user ? userFavorites : recipesWithStats.slice(0, 3);
-  const heroSectionTitle = user ? "Your Favorites" : "Featured from Mom's Kitchen";
+  // A. Your Favorites (Logged in only)
+  const userFavorites = user ? recipesWithStats.filter(r => r.is_favorited) : [];
+
+  // B. Featured: Top Favorited (Global)
+  // Sort by count DESC, then created DESC
+  const featuredRecipes = [...recipesWithStats].sort((a, b) => {
+      if (b.favorite_count !== a.favorite_count) return b.favorite_count - a.favorite_count;
+      return new Date(b.created_at) - new Date(a.created_at);
+  });
+
+  // C. Fresh from the Kitchen: Top Favorited Created This Week
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  
+  let freshRecipes = recipesWithStats.filter(r => new Date(r.created_at) > oneWeekAgo);
+  
+  // Sort Fresh by Popularity
+  freshRecipes.sort((a, b) => b.favorite_count - a.favorite_count);
+
+  // Fallback: If 0 fresh recipes, just use most recent 5
+  if (freshRecipes.length === 0) {
+      freshRecipes = [...recipesWithStats].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }
 
   return (
     <main className={styles.container}>
-      {/* Restored Hero Header */}
+      {/* Hero Header */}
       <section style={{textAlign:'center', padding:'4rem 2rem', background:'var(--card-bg)', marginBottom:'2rem'}}>
           <h1 style={{fontSize:'3.5rem', marginBottom:'1rem', color:'var(--primary)'}}>Mom's Secret Recipes</h1>
           <p style={{fontSize:'1.2rem', maxWidth:'600px', margin:'0 auto 2rem', opacity:0.8}}>
-              A collection of cherished family recipes, passed down through generations. 
-              Now digitized for the modern kitchen.
+              A collection of cherished family recipes, passed down through generations.
           </p>
           <Link 
             href="/recipes" 
@@ -71,35 +88,26 @@ export default async function Home() {
           </Link>
       </section>
 
+      {/* 1. YOUR FAVORITES (If Logged In) */}
+      {user && (
+          <section className={styles.featured}>
+            <h2 className={styles.sectionTitle}>Your Favorites</h2>
+            <PaginatedRecipeList recipes={userFavorites} pageSize={3} />
+          </section>
+      )}
+
+      {/* 2. FEATURED (Top Favorited Global) */}
       <section className={styles.featured}>
-        
-        <h2 className={styles.sectionTitle}>{heroSectionTitle}</h2>
-        
-        {heroRecipes.length === 0 ? (
-            <p style={{textAlign:'center', fontStyle:'italic', opacity:0.7, marginBottom:'3rem'}}>
-                {user ? "You haven't favorited any recipes yet. Go explore!" : "No recipes yet."}
-            </p>
-        ) : (
-            <div className={styles.grid}>
-            {heroRecipes.map((recipe) => (
-                <RecipeCard 
-                    key={recipe.id} 
-                    recipe={recipe} 
-                />
-            ))}
-            </div>
-        )}
+        <h2 className={styles.sectionTitle}>Featured Favorites</h2>
+        <PaginatedRecipeList recipes={featuredRecipes} pageSize={3} />
       </section>
 
+      {/* 3. FRESH (Top Favorited Weekly) */}
       <section className={styles.featured} style={{paddingTop:0}}>
         <h2 className={styles.sectionTitle} style={{fontSize:'2rem', borderTop:'1px solid var(--card-border)', paddingTop:'3rem'}}>
             Fresh from the Kitchen
         </h2>
-        <div className={styles.grid}>
-          {recipesWithStats.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
-        </div>
+        <PaginatedRecipeList recipes={freshRecipes} pageSize={3} />
       </section>
     </main>
   );

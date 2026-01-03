@@ -141,6 +141,8 @@ export default function RecipeListingClient({ initialRecipes = [], favoriteIds =
              ))}
           </div>
 
+          <hr className={styles.divider} />
+
           {/* Secondary Level: Sub-Categories (Only for My Tags) */}
           {activeCategory === 'My Tags' && (
               <div className={styles.categoryScroll} style={{display:'flex', gap:'0.75rem', overflowX:'auto', paddingBottom:'0', marginBottom:'0', scrollbarWidth:'none'}}>
@@ -167,7 +169,9 @@ export default function RecipeListingClient({ initialRecipes = [], favoriteIds =
               </div>
           )}
 
-          {/* Tags Area */}
+           {activeCategory === 'My Tags' && <hr className={styles.divider} />}
+
+           {/* Tags Area */}
           <div className={styles.tagArea} style={{display:'flex', flexWrap:'wrap', gap:'0.5rem', justifyContent:'center', minHeight:'50px'}}>
               {visibleTags.length === 0 ? (
                   <p style={{fontStyle:'italic', opacity:0.6, fontSize:'0.9rem'}}>
