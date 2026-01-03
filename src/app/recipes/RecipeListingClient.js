@@ -104,21 +104,17 @@ export default function RecipeListingClient({ initialRecipes = [], favoriteIds =
     <div className={styles.container}>
       <div className={styles.header}>
         {/* Search Bar */}
-        <div style={{maxWidth: '600px', margin: '0 auto 1.5rem'}}>
+        <div className={styles.searchWrapper}>
              <input
                 type="text"
                 placeholder="Search for lasagna, apple pie..."
                 className={styles.searchBar}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                style={{
-                    width:'100%', padding:'1rem 1.5rem', borderRadius:'30px', border:'1px solid var(--card-border)',
-                    fontSize:'1.1rem', boxShadow:'0 4px 12px rgba(0,0,0,0.03)', outline:'none'
-                }}
               />
         </div>
 
-        <div className={styles.controls} style={{maxWidth:'800px', margin:'0 auto', gap:'0.75rem'}}>
+        <div className={styles.controls}>
           
           {/* Category Pills (Horizontal Scroll) */}
           <div className={styles.categoryScroll} style={{display:'flex', gap:'0.75rem', overflowX:'auto', paddingBottom:'0', marginBottom:'0', scrollbarWidth:'none'}}>

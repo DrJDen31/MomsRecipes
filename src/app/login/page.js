@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/client'
 import { useState } from 'react'
 import styles from './login.module.css'
+import { getURL } from '@/utils/url-helpers'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -18,7 +19,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${location.origin}/auth/callback`,
+        emailRedirectTo: `${getURL()}/auth/callback`,
       },
     })
 
