@@ -1,7 +1,7 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem 1rem;
 }
 
 .header {
@@ -9,12 +9,9 @@
 }
 
 .header h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
+    color: var(--foreground);
     margin-bottom: 0.5rem;
-    background: var(--gradient-primary);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .header p {
@@ -30,8 +27,21 @@
     color: var(--foreground-muted);
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 1rem;
+.exportBtn:hover {
+    background: var(--background-hover) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary);
+}
+
+.summaryGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .summaryGrid {
+        grid-template-columns: 1fr 1fr;
     }
 }

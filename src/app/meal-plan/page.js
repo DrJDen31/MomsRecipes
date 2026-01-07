@@ -129,7 +129,7 @@ export default function MealPlanPage() {
           onRefresh={fetchMeals}
           onDelete={deleteMeal}
         />
-        <div style={{display:'grid', gridTemplateColumns: '1fr 1fr', gap:'1.5rem', marginTop:'1.5rem'}}>
+        <div className={styles.summaryGrid}>
             <MealList weekMeals={weekMeals} />
             <IngredientTally weekMeals={weekMeals} />
         </div>
