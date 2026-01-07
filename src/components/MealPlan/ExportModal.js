@@ -36,6 +36,11 @@ export default function ExportModal({ isOpen, onClose, data }) {
           <button onClick={onClose} className={styles.closeBtn}><X size={20} /></button>
         </div>
 
+        <div style={{color:'var(--foreground-muted)', fontSize:'0.9rem', lineHeight:'1.4'}}>
+            <p><strong>{Object.values(data).flat().length} meals</strong> are included in this export.</p>
+            <p style={{marginTop:'0.5rem'}}>This data file (JSON) contains your menu and ingredient details. You can save it for backup or use it with other tools.</p>
+        </div>
+
         <textarea 
             className={styles.preview}
             value={jsonString}
