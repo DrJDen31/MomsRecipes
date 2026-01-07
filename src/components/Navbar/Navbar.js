@@ -31,6 +31,7 @@ export default function Navbar({ user }) {
           </Link>
           <Link href="/recipes" className={styles.link} onClick={() => setIsOpen(false)}>All Recipes</Link>
           <Link href="/my-recipes" className={styles.link} onClick={() => setIsOpen(false)}>My Recipes</Link>
+          <Link href="/meal-plan" className={styles.link} onClick={() => setIsOpen(false)}>Meal Plan</Link>
           <Link href="/add" className={styles.link} onClick={() => setIsOpen(false)}>Add Recipe</Link>
           <Link href="/tags" className={styles.link} onClick={() => setIsOpen(false)}>Tags</Link>
         </div>

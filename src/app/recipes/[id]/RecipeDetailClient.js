@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import IngredientScaler from '@/components/IngredientScaler/IngredientScaler';
+import AddRecipeToPlanButton from '@/components/MealPlan/AddRecipeToPlanButton';
 import { addNote, deleteNote, updateRecipe, uploadImage, addToGallery, removeFromGallery, toggleFavorite, saveUserTag, deleteRecipe, grantEditAccess, revokeEditAccess, getEditors } from '@/app/actions';
 import { useTags } from '@/context/TagContext';
 import { TAG_CATEGORIES } from '@/lib/constants';
@@ -460,22 +461,25 @@ export default function RecipeDetailClient({ recipe, canEdit, isOwner, userId })
              <div style={{flex:1}}></div>
              <div style={{display:'flex', gap:'0.5rem', alignItems:'center'}}>
                 {!isEditing && (
-                    <button
-                        onClick={handleFavoriteToggle}
-                        style={{
-                            background:'white',
-                            border:'1px solid var(--button-border)',
-                            color: isFavorited ? 'red' : 'var(--foreground)',
-                            padding:'0.5rem 1rem',
-                            borderRadius:'20px',
-                            cursor:'pointer',
-                            display:'flex', alignItems:'center', gap:'0.5rem',
-                            boxShadow:'0 2px 4px rgba(0,0,0,0.05)'
-                        }}
-                    >
-                        <span style={{fontSize:'1.2rem'}}>{isFavorited ? '❤️' : '🤍'}</span>
-                        <span style={{fontWeight:'bold'}}>{favCount}</span>
-                    </button>
+                    <>
+                        <AddRecipeToPlanButton recipe={r} />
+                        <button
+                            onClick={handleFavoriteToggle}
+                            style={{
+                                background:'white',
+                                border:'1px solid var(--button-border)',
+                                color: isFavorited ? 'red' : 'var(--foreground)',
+                                padding:'0.5rem 1rem',
+                                borderRadius:'20px',
+                                cursor:'pointer',
+                                display:'flex', alignItems:'center', gap:'0.5rem',
+                                boxShadow:'0 2px 4px rgba(0,0,0,0.05)'
+                            }}
+                        >
+                            <span style={{fontSize:'1.2rem'}}>{isFavorited ? '❤️' : '🤍'}</span>
+                            <span style={{fontWeight:'bold'}}>{favCount}</span>
+                        </button>
+                    </>
                 )}
 
                  {/* Only show Edit button if user is owner OR editor */}
