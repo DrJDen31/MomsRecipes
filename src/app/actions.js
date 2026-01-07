@@ -377,11 +377,32 @@ export async function getMyRecipes() {
     }
     const galleryRecipes = Array.from(galleryMap.values());
 
+    // 4. Fetch User's Favorites with full recipe details
+    const { data: userFavs } = await supabase
+        .from('favorites')
+        .select('recipe_id, recipes(*, favorites(count))')
+        .eq('user_id', user.id);
+    
+    // Extract recipes from the join
+    const favorites = userFavs ? userFavs.map(f => f.recipes) : [];
+    
+    // Create a Set for efficient lookup of "is_favorited" status (which is true for all of these obviously, but also for others)
+    const favSet = new Set(userFavs?.map(f => f.recipe_id));
+
+    // Helper to enrich
+    const enrich = (list) => list?.map(r => ({
+        ...r, 
+        is_favorited: favSet.has(r.id),
+        // Ensure favorite_count is a number if it comes as [{count: N}] or just N
+        favorite_count: Array.isArray(r.favorites) && r.favorites[0] ? r.favorites[0].count : (r.favorites?.count || 0)
+    }));
+
     return {
         success: true,
-        owned: owned || [],
-        shared: sharedRecipes || [],
-        gallery: galleryRecipes || []
+        owned: enrich(owned) || [],
+        shared: enrich(sharedRecipes) || [],
+        gallery: enrich(galleryRecipes) || [],
+        favorites: enrich(favorites) || []
     };
 }
 

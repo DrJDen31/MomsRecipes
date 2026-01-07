@@ -14,7 +14,7 @@ export default async function MyRecipesPage() {
     redirect('/login');
   }
 
-  const { success, owned, shared, gallery, error } = await getMyRecipes();
+  const { success, owned, shared, gallery, favorites, error } = await getMyRecipes();
 
   if (!success) {
      console.error('Failed to fetch my recipes:', error);
@@ -25,6 +25,7 @@ export default async function MyRecipesPage() {
       owned={owned || []} 
       shared={shared || []} 
       gallery={gallery || []}
+      favorites={favorites || []}
       userId={user.id} 
     />
   );

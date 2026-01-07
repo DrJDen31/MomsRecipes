@@ -7,11 +7,12 @@ import Link from 'next/link';
 
 import { Plus } from 'lucide-react';
 
-export default function MyRecipesClient({ owned = [], shared = [], gallery = [] }) {
+export default function MyRecipesClient({ owned = [], shared = [], gallery = [], favorites = [] }) {
   const [activeTab, setActiveTab] = useState('owned');
 
   const tabs = [
     { id: 'owned', label: 'My Recipes', count: owned.length, data: owned },
+    { id: 'favorites', label: 'My Favorites', count: favorites.length, data: favorites },
     { id: 'shared', label: 'Shared with Me', count: shared.length, data: shared },
     { id: 'gallery', label: 'My Gallery', count: gallery.length, data: gallery },
   ];
@@ -89,6 +90,12 @@ export default function MyRecipesClient({ owned = [], shared = [], gallery = [] 
             <>
               <h3>No gallery contributions</h3>
               <p>Add photos to recipes you've cooked to see them here.</p>
+            </>
+          )}
+          {activeTab === 'favorites' && (
+            <>
+              <h3>No favorites yet</h3>
+              <p>Heart recipes you love to save them here for quick access.</p>
             </>
           )}
         </div>
